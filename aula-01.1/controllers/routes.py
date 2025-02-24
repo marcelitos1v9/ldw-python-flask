@@ -27,5 +27,12 @@ def init_app(app):
 
     @app.route('/cad_games', methods=['GET', 'POST'])
     def cad_games():
-        
-        return render_template('cad_games.html')
+        if request.method == 'POST':
+            novo_jogo = {
+                "Titulo": request.form.get('titulo'),
+                "Ano": int(request.form.get('ano')),
+                "Categoria": request.form.get('categoria')
+            }
+            gamelist.append(novo_jogo)
+            return redirect(url_for('cad_games'))
+        return render_template('cad_games.html',gamelist=gamelist)
