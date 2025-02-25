@@ -1,0 +1,56 @@
+<% extends 'base.html' %>
+
+<% block content %>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4 text-primary">Cadastro de Jogos</h2>
+                        <form action="{{url_for('cad_games')}}" method="post" class="needs-validation">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ano" class="form-label">Ano</label>
+                                <input type="number" class="form-control" id="ano" name="ano" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <select class="form-select" id="categoria" name="categoria" required>
+                                    <option value="">Selecione uma categoria</option>
+                                    <option value="FPS-Online">FPS Online</option>
+                                    <option value="RPG">RPG</option>
+                                    <option value="Estratégia">Estratégia</option>
+                                    <option value="Esporte">Esporte</option>
+                                    <option value="Aventura">Aventura</option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <h4 class="text-center mb-3">Jogos Cadastrados</h4>
+                        <div class="list-group">
+                            {% for game in gamelist %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-1">{{game.Titulo}}</h5>
+                                        <small>Ano: {{game.Ano}} | Categoria: {{game.Categoria}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- percorrer a lista de jogos ja existente  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<% endblock content %>

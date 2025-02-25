@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-5 text-uppercase fw-bold">Lista de Jogos</h2>
+    <div class="row g-4 justify-content-center">
+        {% for game in gamesjson %}
+        <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden" style="width: 20rem;">
+                <img src="{{ game.thumbnail }}" class="card-img-top" alt="{{ game.title }}">
+                <div class="card-body text-center bg-light">
+                    <h5 class="card-title text-primary fw-bold">{{ game.title }}</h5>
+                    <p class="card-text mb-1"><strong>Gênero:</strong> {{ game.genre }}</p>
+                    <p class="card-text"><strong>Plataforma:</strong> {{ game.platform }}</p>
+                    <a href="{{url_for('apigames',id=game.id)}}" class="btn btn-outline-primary w-100 mt-2">Mais Informações</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+                <img src="{{ ginfo.thumbnail }}" class="card-img-top" alt="{{ ginfo.title }}">
+                <div class="card-body text-center bg-light">
+                    <h2 class="card-title text-primary fw-bold">{{ ginfo.title }}</h2>
+                    <p class="card-text text-muted">{{ ginfo.short_description }}</p>
+                    <p class="card-text"><strong>Gênero:</strong> {{ ginfo.genre }}</p>
+                    <p class="card-text"><strong>Plataforma:</strong> {{ ginfo.platform }}</p>
+                    <p class="card-text"><strong>Desenvolvedor:</strong> {{ ginfo.developer }}</p>
+                    <p class="card-text"><strong>Publicadora:</strong> {{ ginfo.publisher }}</p>
+                    <p class="card-text"><strong>Data de Lançamento:</strong> {{ ginfo.release_date }}</p>
+                    <a href="{{ ginfo.game_url }}" class="btn btn-outline-primary w-100 mt-2" target="_blank">Jogar Agora</a>
+                    <a href="{{ ginfo.freetogame_profile_url }}" class="btn btn-secondary w-100 mt-2" target="_blank">Perfil do Jogo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
