@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Lançamentos SpaceX</h1>
+    
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <form class="d-flex gap-2" method="get">
+                <input type="text" name="search" class="form-control" placeholder="Buscar por nome..." value="{{ search }}">
+                <select name="status" class="form-select" style="width: auto;">
+                    <option value="" {% if not status %}selected{% endif %}>Todos</option>
+                    <option value="success" {% if status == 'success' %}selected{% endif %}>Sucesso</option>
+                    <option value="failed" {% if status == 'failed' %}selected{% endif %}>Falha</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                {% if search or status %}
+                <a href="{{ url_for('launches') }}" class="btn btn-outline-secondary">Limpar</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for launch in launches %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ url_for('launch_detail', launch_id=launch.id) }}" class="text-decoration-none">
+                <div class="launch-card card h-100 shadow-lg">
+                    <div class="launch-image-wrapper">
+                        {% if launch.links.patch.large %}
+                        <img src="{{ launch.links.patch.large }}" class="card-img-top launch-image" alt="{{ launch.name }}">
+                        {% else %}
+                        <div class="no-image-placeholder">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        {% endif %}
+                        <div class="launch-overlay">
+                            <span class="view-details">Ver Detalhes</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="card-title mb-0">{{ launch.name }}</h3>
+                            {% if launch.success == true %}
+                            <span class="badge bg-success">Sucesso</span>
+                            {% elif launch.success == false %}
+                            <span class="badge bg-danger">Falha</span>
+                            {% else %}
+                            <span class="badge bg-warning">Pendente</span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="card-text text-muted">
+                            {% if launch.details %}
+                                {{ launch.details[:150] }}...
+                            {% else %}
+                                Sem detalhes disponíveis
+                            {% endif %}
+                        </p>
+                        
+                        <div class="launch-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ launch.date_utc.split('T')[0] }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-hashtag"></i>
+                                <span>Voo #{{ launch.flight_number }}</span>
+                            </div>
+                            {% if launch.cores[0].landing_success == true %}
+                            <div class="stat-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span>Pouso</span>
+                            </div>
+                            {% elif launch.cores[0].landing_success == false %}
+                            <div class="stat-item">
+                                <i class="fas fa-times-circle text-danger"></i>
+                                <span>Pouso</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginação Melhorada -->
+    {% if total_pages > 1 %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Navegação de páginas">
+            <ul class="pagination">
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('launches', page=1, search=search, status=status) }}" aria-label="Primeira">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('launches', page=page-1, search=search, status=status) }}">Anterior</a>
+                </li>
+                
+                {% set start = [page-2, 1]|max %}
+                {% set end = [start+4, total_pages+1]|min %}
+                {% set start = [end-4, 1]|max %}
+                
+                {% for p in range(start, end) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('launches', page=p, search=search, status=status) }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('launches', page=page+1, search=search, status=status) }}">Próxima</a>
+                </li>
+                
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('launches', page=total_pages, search=search, status=status) }}" aria-label="Última">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+a:hover {
+    text-decoration: none;
+}
+
+.launch-card {
+    transition: transform 0.3s ease;
+}
+
+.launch-card:hover {
+    transform: translateY(-5px);
+}
+
+.launch-image-wrapper {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.launch-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+.no-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-image-placeholder i {
+    font-size: 4rem;
+    color: #dee2e6;
+}
+
+.launch-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.stat-item i {
+    color: #005288;
+}
+
+.badge {
+    padding: 0.5em 1em;
+}
+
+.card-title {
+    color: #005288;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.btn-primary {
+    background-color: #005288;
+    border-color: #005288;
+}
+
+.btn-primary:hover {
+    background-color: #003d66;
+    border-color: #003d66;
+}
+
+/* Estilos para os filtros */
+.form-control:focus, .form-select:focus {
+    border-color: #005288;
+    box-shadow: 0 0 0 0.2rem rgba(0, 82, 136, 0.25);
+}
+
+/* Estilos para a paginação */
+.pagination .page-link {
+    color: #005288;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #005288;
+    border-color: #005288;
+}
+
+.pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 82, 136, 0.25);
+}
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Hero Section com Background Parallax -->
+    <div class="position-relative overflow-hidden" style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3') no-repeat center center; background-size: cover; height: 80vh;">
+        <div class="position-absolute w-100 h-100" style="background: rgba(0,0,0,0.7);"></div>
+        <div class="container position-relative h-100">
+            <div class="d-flex flex-column justify-content-center align-items-center h-100 text-white text-center">
+                <h1 class="display-2 fw-bold mb-4">SpaceX Explorer</h1>
+                <p class="lead mb-5">Explore o universo através dos dados da SpaceX: lançamentos, foguetes e missões espaciais.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{url_for('launches')}}" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-rocket me-2"></i>Últimos Lançamentos
+                    </a>
+                    <a href="{{url_for('rockets')}}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-space-shuttle me-2"></i>Nossos Foguetes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Informação -->
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- Card de Lançamentos -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3 text-primary">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="card-title">Lançamentos</h3>
+                        <p class="card-text">Acompanhe todos os lançamentos da SpaceX, passados e futuros.</p>
+                        <a href="{{url_for('launches')}}" class="btn btn-outline-primary">Ver Lançamentos</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card de Foguetes -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3 text-primary">
+                            <i class="fas fa-space-shuttle"></i>
+                        </div>
+                        <h3 class="card-title">Foguetes</h3>
+                        <p class="card-text">Conheça a frota de foguetes revolucionários da SpaceX.</p>
+                        <a href="{{url_for('rockets')}}" class="btn btn-outline-primary">Ver Foguetes</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card de Tripulação -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3 text-primary">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                        <h3 class="card-title">Tripulação</h3>
+                        <p class="card-text">Conheça os astronautas que fazem parte das missões SpaceX.</p>
+                        <a href="{{url_for('crew')}}" class="btn btn-outline-primary">Ver Tripulação</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Estatísticas -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="display-4 fw-bold text-primary">150+</h2>
+                    <p class="text-muted">Lançamentos Realizados</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="display-4 fw-bold text-primary">60+</h2>
+                    <p class="text-muted">Pousos Bem-sucedidos</p>
+                </div>
+                <div class="col-md-4">
+                    <h2 class="display-4 fw-bold text-primary">10+</h2>
+                    <p class="text-muted">Anos de Inovação</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adicione estes estilos no head ou em um arquivo CSS separado -->
+<style>
+    .hover-card {
+        transition: transform 0.3s ease;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #005288;
+        border-color: #005288;
+    }
+
+    .btn-primary:hover {
+        background-color: #003366;
+        border-color: #003366;
+    }
+
+    .text-primary {
+        color: #005288 !important;
+    }
+</style>
+
+<!-- Adicione o Font Awesome para os ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock content %}
