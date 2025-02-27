@@ -17,7 +17,9 @@ def init_app(app):
     @app.route('/')
     def home():
         year = datetime.now().year
-        return render_template('index.html', year=year)
+        response = requests.get('https://api.spacexdata.com/v4/history')
+        history_data = response.json()
+        return render_template('index.html', year=year, history=history_data)
 
     @app.route('/launches')
     def launches():
@@ -81,7 +83,9 @@ def init_app(app):
     @app.route('/crew')
     def crew():
         year = datetime.now().year
-        return render_template('crew.html', year=year)
+        response = requests.get('https://api.spacexdata.com/v4/crew')
+        crew_data = response.json()
+        return render_template('crew.html', year=year, crew=crew_data)
 
     @app.route('/api-docs')
     def api_docs():
