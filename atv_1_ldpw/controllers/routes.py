@@ -83,9 +83,54 @@ def init_app(app):
     @app.route('/crew')
     def crew():
         year = datetime.now().year
+        page = request.args.get('page', 1, type=int)
+        items_per_page = 9
+        search = request.args.get('search', '')
+        status = request.args.get('status', '')
+        
+        # Busca todos os membros da tripulação
         response = requests.get('https://api.spacexdata.com/v4/crew')
-        crew_data = response.json()
-        return render_template('crew.html', year=year, crew=crew_data)
+        all_crew = response.json()
+        
+        # Aplica filtros
+        filtered_crew = all_crew
+        if search:
+            filtered_crew = [
+                member for member in filtered_crew 
+                if search.lower() in member['name'].lower()
+            ]
+        if status:
+            filtered_crew = [
+                member for member in filtered_crew 
+                if member['status'].lower() == status.lower()
+            ]
+        
+        # Ordenar por nome
+        filtered_crew.sort(key=lambda x: x['name'])
+        
+        # Paginação
+        total_crew = len(filtered_crew)
+        total_pages = (total_crew + items_per_page - 1) // items_per_page
+        
+        # Ajusta a página atual se estiver fora do intervalo
+        if page > total_pages:
+            page = total_pages
+        if page < 1:
+            page = 1
+            
+        start_idx = (page - 1) * items_per_page
+        end_idx = start_idx + items_per_page
+        current_crew = filtered_crew[start_idx:end_idx]
+        
+        return render_template(
+            'crew.html',
+            year=year,
+            crew=current_crew,
+            page=page,
+            total_pages=total_pages,
+            search=search,
+            status=status
+        )
 
     @app.route('/api-docs')
     def api_docs():

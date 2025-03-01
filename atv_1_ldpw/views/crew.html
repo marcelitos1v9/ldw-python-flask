@@ -4,6 +4,24 @@
 <div class="container py-5">
     <h1 class="text-center mb-5">Tripulação SpaceX</h1>
     
+    <!-- Adicionar barra de pesquisa e filtros -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form class="d-flex" method="get">
+                <input class="form-control me-2" type="search" placeholder="Buscar por nome..." 
+                       name="search" value="{{ search }}">
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" name="status" onchange="this.form.submit()">
+                <option value="" {% if not status %}selected{% endif %}>Todos os Status</option>
+                <option value="active" {% if status == 'active' %}selected{% endif %}>Ativo</option>
+                <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Inativo</option>
+            </select>
+        </div>
+    </div>
+
     <div class="row g-4">
         {% for member in crew %}
         <div class="col-md-6 col-lg-4">
@@ -45,6 +63,35 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Adicionar paginação -->
+    {% if total_pages > 1 %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Navegação da tripulação">
+            <ul class="pagination">
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('crew', page=page-1, search=search, status=status) }}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                
+                {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('crew', page=p, search=search, status=status) }}">
+                        {{ p }}
+                    </a>
+                </li>
+                {% endfor %}
+                
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('crew', page=page+1, search=search, status=status) }}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 </div>
 
 <style>
@@ -281,6 +328,54 @@ h1.text-center::after {
     height: 4px;
     background: linear-gradient(45deg, #005288, #0077cc);
     border-radius: 2px;
+}
+
+/* Estilos para a paginação */
+.pagination {
+    gap: 0.5rem;
+}
+
+.page-link {
+    border-radius: 8px;
+    border: none;
+    color: #005288;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #005288;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(45deg, #005288, #0077cc);
+    border: none;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    background-color: rgba(0,0,0,0.1);
+    color: #6c757d;
+}
+
+/* Estilos para os filtros */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 0.6rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #005288;
+    box-shadow: 0 0 0 0.2rem rgba(0,82,136,0.25);
+}
+
+.btn-outline-primary {
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
 }
 </style>
 
